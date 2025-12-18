@@ -1,4 +1,4 @@
-import { strictEqual } from 'node:assert'
+import { ok, strictEqual } from 'node:assert'
 import tehanu from 'tehanu'
 import { rollup } from 'rollup'
 import { minify } from 'terser'
@@ -8,10 +8,13 @@ const test = tehanu(import.meta.filename)
 
 test('attaches source map', async () => {
   const input = 'console.log( "Hello, world!" )'
-  const expected = `console.log( "Hello, world!" );
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic2NyaXB0LmpzIiwic291cmNlcyI6WyIvVXNlcnMvZmVyZGlwci9Tb3VyY2VzL2dpdGh1Yi9hdHRhY2gtc291cmNlLW1hcC9zY3JpcHQuanMiXSwic291cmNlc0NvbnRlbnQiOlsiY29uc29sZS5sb2coIFwiSGVsbG8sIHdvcmxkIVwiICkiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsT0FBTyxDQUFDLEdBQUcsRUFBRSxlQUFlIn0=`
+  const expectedStart = `console.log( "Hello, world!" );
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic2NyaXB0LmpzIiwic291cmNlcyI6WyI`
+  const expectedEnd = 'cmxkIVwiICkiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsT0FBTyxDQUFDLEdBQUcsRUFBRSxlQUFlIn0='
   const { code } = await attachSourceMap(rollup, 'script.js', input)
-  strictEqual(code.trim(), expected.trim())
+  const actual = code.trim()
+  ok(actual.startsWith(expectedStart))
+  ok(actual.endsWith(expectedEnd))
 })
 
 test('minifies with source map', async () => {
