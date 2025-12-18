@@ -1,6 +1,6 @@
 {
   "name": "attach-source-map",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Attaches an inline source map to a script.",
   "author": "Ferdinand Prantl <prantlf@gmail.com>",
   "license": "MIT",
